@@ -6,7 +6,7 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 module.exports = {
   // entry: './src/index.js', // 預設 entry name 為 main
   entry: {
-    app: './src/index.js', // 設置 entry name 為 app
+    app: './src/index.ts', // 設置 entry name 為 app
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -28,11 +28,9 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader'], // 有順序性的
       },
       {
-        test: /\.m?js$/,
+        test: /\.tsx?$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
       },
       {
         test: /\.(jpe?g|png|gif)$/i,
@@ -60,17 +58,18 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Hello App',
+      title: 'TypeScript App',
       template: './src/template.html',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
   ],
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    extensions: ['.tsx', '.ts', '.js'],
   },
 };
