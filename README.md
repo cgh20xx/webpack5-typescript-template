@@ -1,6 +1,6 @@
-# webpack5 快速筆記 2022
+# webpack5 TypeScript template
 
-## 安裝 webpack 5 test
+## 安裝 webpack 5
 ```
 npm i webpack -D
 ```
@@ -24,7 +24,7 @@ const path = require('path');
 module.exports = {
   // entry: './src/index.js', // 預設 entry name 為 main
   entry: {
-    app: './src/index.js', // 設置 entry name 為 app
+    app: './src/index.ts', // 設置 entry name 為 app
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -184,38 +184,51 @@ new MiniCssExtractPlugin({
 ```
 
 
-## 安裝及設定 Babel
-babel 可將最新的 JS 語法轉為各瀏覽器都支持的舊語法，讓開發時可以使用最新的 JS 語法，不用擔心瀏覽器支援度問題
+## 安裝及設定 TypeScript
+透過 ts-loader 讓 webpack 支援載入 .ts 並轉換為 .js
 
-文件：https://babeljs.io/setup#installation
+文件：https://webpack.js.org/guides/typescript/
 
-安裝 babel-loader 及 @babel/core 及 @babel/preset-env
+安裝 typescript 及 ts-loader。若原本有安裝 babel 相關套件可以移除了。
 ```
-npm i babel-loader @babel/core @babel/preset-env -D
+npm install --save-dev typescript ts-loader
 ```
 
-設定 babel-loader 在 webpack.config.js
-```js
+新增 tsconfig.json 並貼上以下代碼
+```json
 {
-  module: {
-    rules: [
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      }
-    ]
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
   }
 }
 ```
 
-建立 babel.config.json 然後貼上以下代碼
-```json
-{
-  "presets": ["@babel/preset-env"]
-}
+在 webpack.config.js 新增以下有關 typscript 設定
+```js
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.ts',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  }
+};
 ```
 
 
